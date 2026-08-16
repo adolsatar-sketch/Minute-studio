@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found | MINUTE Studio</title>
+<meta name="description" content="This page doesn't exist at MINUTE Studio.">
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/transitions.css">
+<style>
+.error-main{
+  min-height:100vh;background:var(--near-black);color:var(--cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:0 24px;
+}
+.error-code{font-family:var(--font-mono);font-size:13px;letter-spacing:.2em;color:var(--time-accent);margin-bottom:22px;}
+.error-title{font-size:clamp(48px,10vw,140px);line-height:.9;margin-bottom:24px;}
+.error-sub{font-size:14px;color:var(--cream-dim);max-width:380px;margin-bottom:36px;font-weight:300;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<div id="frame-transition" class="frame-transition" aria-hidden="true">
+  <div class="ft-frames"><span class="ft-f"></span><span class="ft-f"></span><span class="ft-f"></span><span class="ft-f"></span></div>
+  <div class="ft-sweep"></div>
+  <div class="ft-time mono timecode" data-timecode>00:00:00:00</div>
+</div>
+
+<main class="error-main">
+  <span class="error-code mono">404 / FRAME NOT FOUND</span>
+  <h1 class="display error-title">Lost<br>A Minute</h1>
+  <p class="error-sub">This page doesn't exist — the frame you're looking for was cut, moved, or never shot.</p>
+  <a href="/index.html" class="btn-arrow" data-magnetic aria-label="Back to home">
+    <svg viewBox="0 0 24 24"><path d="M5 19L19 5M19 5H9M19 5V15"/></svg>
+  </a>
+</main>
+
+<script src="/js/main.js" defer></script>
+<script src="/js/transitions.js" defer></script>
+</body>
+</html>

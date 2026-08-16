@@ -1,0 +1,13 @@
+/* ================================================================
+   MINUTE / دقيقة — ABOUT
+   ================================================================ */
+.services-band{background:var(--cream);padding:80px 0;}
+.services-head{margin-bottom:50px;}
+.services-head .chapter-num{color:var(--oxblood);}
+.services-head h2{color:var(--oxblood);font-size:clamp(34px,5vw,56px);line-height:.96;}
+.services-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px 18px;}
+.service-item{text-align:start;}
+.service-icon{width:46px;height:46px;border:1px solid var(--ink-faint);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.service-icon svg{width:18px;height:18px;stroke:var(--oxblood);fill:none;stroke-width:1.4;}
+.service-item span{display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;line-height:1.4;color:var(--ink-dim);font-weight:500;}
+@media (max-width:700px){ .services-row{grid-template-columns:repeat(2,1fr);} }
