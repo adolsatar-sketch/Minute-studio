@@ -1,0 +1,30 @@
+/* ================================================================
+   MINUTE / دقيقة — CONTACT
+   ================================================================ */
+.contact-main{background:var(--cream);padding:90px 0 110px;}
+.contact-lead{max-width:720px;margin-bottom:60px;}
+.contact-lead h2{color:var(--oxblood);font-size:clamp(38px,6.6vw,84px);line-height:.98;margin-bottom:20px;}
+.contact-lead p{font-size:15px;line-height:1.7;color:var(--ink-dim);max-width:460px;font-weight:300;}
+
+.contact-list{border-top:1px solid var(--cream-line);}
+.contact-row{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:32px 0;border-bottom:1px solid var(--cream-line);
+  transition:padding-inline-start .35s var(--ease);
+}
+.contact-row:hover{padding-inline-start:14px;}
+.contact-row .cr-left{display:flex;align-items:center;gap:22px;}
+.contact-row .cr-num{font-family:var(--font-mono);font-size:12px;color:var(--oxblood);}
+.contact-row .cr-icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--ink-faint);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-row .cr-icon svg{width:17px;height:17px;stroke:var(--oxblood);fill:none;stroke-width:1.5;}
+.contact-row .cr-meta{display:flex;flex-direction:column;gap:2px;}
+.contact-row .cr-meta .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+.contact-row .cr-meta .v{
+  font-family:var(--font-display);font-size:clamp(20px,2.8vw,32px);color:var(--oxblood);
+  direction:ltr;unicode-bidi:isolate;
+}
+[dir="rtl"] .contact-row .cr-meta .v{display:inline-block;text-align:end;}
+html[lang="ar"] .contact-row .cr-meta .v{font-weight:800;}
+@media (max-width:640px){
+  .contact-row .cr-left{gap:16px;}
+}

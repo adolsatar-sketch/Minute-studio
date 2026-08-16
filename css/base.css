@@ -1,0 +1,376 @@
+/* ================================================================
+   MINUTE / دقيقة — BASE SYSTEM
+   Shared across every page, both language trees. Written with
+   logical properties (margin-inline, text-align:start/end, etc.)
+   so English (ltr) and Arabic (rtl) documents share this file
+   without mirroring hacks. rtl.css holds the few remaining
+   direction-specific exceptions logical properties can't cover.
+   ================================================================ */
+
+:root{
+  /* — brand palette (carried over from the original DAQEEQA identity) — */
+  --cream:#EDE6DA;
+  --cream-line:rgba(26,6,8,0.14);
+  --oxblood:#3D0E12;
+  --maroon:#5C1018;
+  --maroon-bright:#7A1620;
+  --near-black:#1A0608;
+  --ink:#1A0608;
+  --ink-dim:rgba(26,6,8,0.62);
+  --ink-faint:rgba(26,6,8,0.4);
+  --cream-dim:rgba(237,230,218,0.7);
+  --cream-faint:rgba(237,230,218,0.45);
+  --hair-dark:rgba(237,230,218,0.18);
+  --ease:cubic-bezier(.16,.84,.32,1);
+  --ease-sharp:cubic-bezier(.7,0,.2,1);
+
+  /* — the one new "time" voice: timecodes, frame counters, chapter marks — */
+  --time-accent:var(--maroon-bright);
+
+  /* — type — */
+  --font-display:'Anton', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --nav-h:78px;
+}
+
+html[lang="ar"]{
+  --font-display:'Cairo', sans-serif;
+  --font-body:'Cairo', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-weight:400;
+  overflow-x:hidden;
+}
+img,video{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;}
+ul{list-style:none;}
+::selection{background:var(--maroon-bright);color:var(--cream);}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important;}
+}
+
+.display{font-family:var(--font-display);font-weight:400;text-transform:uppercase;letter-spacing:-0.01em;}
+html[lang="ar"] .display{font-weight:800;text-transform:none;letter-spacing:0;}
+
+.mono{font-family:var(--font-mono), var(--font-body);font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+
+.wrap{max-width:1480px;margin-inline:auto;padding-inline:5.5vw;}
+@media (max-width:900px){ .wrap{padding-inline:24px;} }
+
+section{position:relative;}
+main{display:block;}
+
+/* ================================================================
+   SCROLL REVEAL — ported from the original .reveal / .reveal.in
+   IntersectionObserver pattern, driven by js/main.js
+   ================================================================ */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;}
+}
+
+/* ================================================================
+   TIMECODE — the shared "time" readout component. Used sparingly:
+   nav corner, transition overlay, chapter headers, ident.
+   Static by default; js/main.js adds a ticking data-live version
+   where wanted. Never mirrored in RTL — timecodes read LTR always,
+   like a film burn-in, regardless of document direction.
+   ================================================================ */
+.timecode{
+  font-family:var(--font-mono), var(--font-body);
+  font-size:11px;
+  letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;
+  direction:ltr;
+  unicode-bidi:isolate;
+}
+
+/* ================================================================
+   FRAME CORNERS — viewfinder / focus-lock motif, reused by the
+   ident, placeholder cards and hover states. Four absolutely
+   positioned corner brackets drawn with border, sized via
+   currentColor so it inherits whatever tone the context needs.
+   ================================================================ */
+.frame-corners{position:relative;}
+.frame-corners::before,
+.frame-corners::after,
+.frame-corners .fc-tr,
+.frame-corners .fc-bl{
+  content:'';position:absolute;width:16px;height:16px;
+  border-color:currentColor;opacity:.55;pointer-events:none;
+}
+.frame-corners::before{top:10px;inset-inline-start:10px;border-inline-start:1px solid;border-top:1px solid;}
+.frame-corners::after{bottom:10px;inset-inline-end:10px;border-inline-end:1px solid;border-bottom:1px solid;}
+.frame-corners .fc-tr{top:10px;inset-inline-end:10px;border-inline-end:1px solid;border-top:1px solid;}
+.frame-corners .fc-bl{bottom:10px;inset-inline-start:10px;border-inline-start:1px solid;border-bottom:1px solid;}
+
+/* ================================================================
+   CHAPTER NUMBER — the running "01 / 06" pattern from the original
+   split sections, generalised into a shared component used on
+   every category page header and homepage section.
+   ================================================================ */
+.chapter-num{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--font-mono), var(--font-body);font-size:12px;letter-spacing:.14em;
+  font-weight:600;margin-bottom:18px;
+}
+.chapter-num .of{opacity:.5;font-weight:400;}
+/* only the numeric "01 / 06" usage (always paired with .of) reads
+   as a fixed-direction timecode; text-label usage ("CONTACT",
+   "الأقسام"...) must keep the document's natural direction */
+.chapter-num:has(.of){direction:ltr;unicode-bidi:isolate;}
+
+/* ================================================================
+   BUTTONS — arrow CTA + underline link, ported/generalised from
+   the original .cta-arrow and .split-cta patterns
+   ================================================================ */
+.btn-arrow{
+  width:52px;height:52px;border-radius:50%;background:var(--oxblood);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .3s var(--ease), transform .3s var(--ease);
+}
+.btn-arrow:hover{background:var(--maroon-bright);transform:rotate(45deg);}
+[dir="rtl"] .btn-arrow:hover{transform:rotate(-135deg);}
+.btn-arrow svg{width:18px;height:18px;stroke:var(--cream);fill:none;stroke-width:1.6;}
+.icon-forward{transition:transform .3s var(--ease);}
+[dir="rtl"] .icon-forward{transform:scaleX(-1);}
+
+.link-line{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+  padding-bottom:2px;border-bottom:1px solid currentColor;
+}
+
+/* ================================================================
+   TOP BAR — persistent at every breakpoint: logo, menu trigger,
+   running timecode, language switch. The overlay menu (below) is
+   the single navigation mechanism at every breakpoint — no separate
+   desktop inline-link system.
+   ================================================================ */
+.topbar{
+  position:fixed;inset-block-start:0;inset-inline:0;z-index:200;
+  height:var(--nav-h);display:flex;align-items:center;
+}
+.topbar-inner{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.topbar{background:transparent;transition:background .4s var(--ease), color .4s var(--ease);}
+.topbar.on-dark{color:var(--cream);}
+.topbar.on-light{color:var(--ink);}
+.topbar.scrolled,.topbar.solid{background:rgba(26,6,8,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--cream);}
+.brand{
+  font-family:var(--font-display);font-size:17px;letter-spacing:.06em;
+  text-transform:uppercase;display:flex;align-items:center;gap:10px;
+}
+html[lang="ar"] .brand{font-weight:800;}
+.brand .brand-ar{font-size:19px;}
+
+.topbar-right{display:flex;align-items:center;gap:26px;}
+.topbar-time{opacity:.75;}
+@media (max-width:640px){ .topbar-time{display:none;} }
+
+.lang-switch{
+  display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:500;
+}
+.lang-switch a{opacity:.5;transition:opacity .25s var(--ease);}
+.lang-switch a.current{opacity:1;text-decoration:underline;text-underline-offset:4px;}
+.lang-switch a:hover{opacity:1;}
+.lang-switch .sep{opacity:.35;}
+
+.menu-btn{
+  display:flex;align-items:center;gap:12px;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;
+}
+.menu-btn .bars{width:22px;height:13px;position:relative;}
+.menu-btn .bars span{position:absolute;inset-inline:0;height:1px;background:currentColor;transition:transform .35s var(--ease-sharp), opacity .25s var(--ease);}
+.menu-btn .bars span:nth-child(1){top:0;}
+.menu-btn .bars span:nth-child(2){top:6px;}
+.menu-btn .bars span:nth-child(3){top:12px;}
+.menu-open .menu-btn .bars span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.menu-open .menu-btn .bars span:nth-child(2){opacity:0;}
+.menu-open .menu-btn .bars span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+/* ================================================================
+   OVERLAY MENU — full-screen numbered timeline, opened via
+   js/main.js. Present in the DOM on every page (structural HTML
+   duplicated per the architecture decision; behaviour shared).
+   ================================================================ */
+.menu-overlay{
+  position:fixed;inset:0;z-index:190;background:var(--near-black);color:var(--cream);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--nav-h) + 6vh) 0 6vh;
+  opacity:0;visibility:hidden;transform:translateY(-1.5%);
+  transition:opacity .55s var(--ease), visibility .55s var(--ease), transform .55s var(--ease);
+}
+.menu-open .menu-overlay{opacity:1;visibility:visible;transform:translateY(0);}
+.menu-list{display:flex;flex-direction:column;}
+.menu-row{
+  display:flex;align-items:baseline;gap:22px;padding:14px 0;
+  border-block-end:1px solid var(--hair-dark);
+  opacity:0;transform:translateY(18px);
+  transition:opacity .6s var(--ease), transform .6s var(--ease), color .3s var(--ease);
+}
+.menu-open .menu-row{opacity:1;transform:translateY(0);}
+.menu-row .mn{font-family:var(--font-mono);font-size:12px;color:var(--time-accent);direction:ltr;unicode-bidi:isolate;}
+.menu-row a{
+  font-family:var(--font-display);font-size:clamp(30px,5.6vw,64px);line-height:1;
+  color:var(--cream-dim);transition:color .3s var(--ease);
+}
+html[lang="ar"] .menu-row a{font-weight:800;}
+.menu-row:hover a,.menu-row a.current{color:var(--cream);}
+.menu-row a.current{text-decoration:underline;text-decoration-color:var(--time-accent);text-underline-offset:8px;}
+.menu-foot{
+  margin-block-start:6vh;padding-block-start:3vh;border-block-start:1px solid var(--hair-dark);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  opacity:0;transition:opacity .8s var(--ease) .3s;
+}
+.menu-open .menu-foot{opacity:1;}
+.menu-foot-links{display:flex;gap:28px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--cream-faint);}
+.menu-foot-links a:hover{color:var(--cream);}
+
+/* ================================================================
+   FOOTER — dark bar, shared across every page
+   ================================================================ */
+footer{background:var(--near-black);color:var(--cream);padding:24px 0;}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.foot-logo{font-family:var(--font-display);font-size:14px;letter-spacing:.06em;}
+html[lang="ar"] .foot-logo{font-weight:800;}
+.foot-copy{font-size:11px;letter-spacing:.04em;color:var(--cream-faint);}
+.foot-links{display:flex;gap:28px;font-size:11px;letter-spacing:.04em;color:var(--cream-faint);}
+.foot-links a:hover{color:var(--cream);}
+
+a:focus-visible,button:focus-visible{outline:1px solid var(--maroon-bright);outline-offset:3px;}
+
+/* ================================================================
+   CURSOR DOT — desktop-only micro-interaction (gated in main.js by
+   matchMedia('(hover:hover) and (pointer:fine)'); never loaded/used
+   on touch devices)
+   ================================================================ */
+.cursor-dot{
+  position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;
+  background:var(--maroon-bright);pointer-events:none;z-index:999;
+  transform:translate(-50%,-50%);transition:width .25s var(--ease), height .25s var(--ease), opacity .25s var(--ease);
+  opacity:0;
+}
+.cursor-dot.active{opacity:1;}
+.cursor-dot.big{width:44px;height:44px;background:transparent;border:1px solid var(--maroon-bright);}
+
+/* ================================================================
+   MANIFESTO — shared statement block, appears on home (full) and
+   about (echoed). SYNCED: keep home.css's index.html/ar copy and
+   about.html/ar copy in agreement if this text ever changes — no
+   build step exists to catch drift automatically.
+   ================================================================ */
+.manifesto{padding:14vw 0;background:var(--cream);}
+.manifesto-head{
+  font-family:var(--font-display);text-transform:uppercase;font-size:clamp(36px,6.4vw,96px);
+  line-height:1.05;color:var(--oxblood);margin-bottom:5vw;
+}
+html[lang="ar"] .manifesto-head{font-weight:800;text-transform:none;}
+.manifesto-rule{width:100%;height:1px;background:var(--cream-line);margin-bottom:5vw;}
+.manifesto-grid{display:grid;grid-template-columns:.4fr 1fr;gap:5vw;align-items:start;}
+.manifesto-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);padding-top:8px;}
+.manifesto-text{font-family:var(--font-body);font-weight:300;font-style:italic;font-size:clamp(20px,2.6vw,32px);line-height:1.45;max-width:900px;color:var(--ink);}
+html[lang="ar"] .manifesto-text{font-style:normal;font-weight:400;}
+@media (max-width:900px){ .manifesto-grid{grid-template-columns:1fr;gap:20px;} }
+
+/* ================================================================
+   TEASER GRID — small image grid, shared by home's Selected Work
+   and about's supporting samples
+   ================================================================ */
+.teaser{background:var(--cream);padding:90px 0 0;}
+.teaser-head{display:grid;grid-template-columns:1fr 1fr .7fr;gap:40px;align-items:start;margin-bottom:48px;}
+.teaser-head h2{color:var(--oxblood);font-size:clamp(40px,6vw,76px);line-height:.92;}
+.teaser-desc{font-size:14px;color:var(--ink-dim);line-height:1.7;padding-top:10px;max-width:300px;}
+.teaser-view{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--oxblood);}
+@media (max-width:900px){ .teaser-head{grid-template-columns:1fr;gap:18px;} }
+.teaser-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.teaser-tile{position:relative;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--cream);}
+.teaser-tile img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.1) brightness(.62);transition:transform .8s var(--ease), filter .5s var(--ease);}
+.teaser-tile:hover img{transform:scale(1.06);filter:grayscale(.15) contrast(1.12) brightness(.74);}
+.teaser-tile::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg, rgba(26,6,8,0.05) 0%, rgba(26,6,8,0.6) 100%);}
+.teaser-cat{position:absolute;bottom:18px;inset-inline-start:20px;z-index:2;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream-dim);font-weight:500;}
+.teaser-title{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;padding:0 20px 46px;color:var(--cream);font-size:clamp(20px,2.6vw,32px);line-height:1;}
+html[lang="ar"] .teaser-title{font-weight:800;}
+@media (max-width:900px){ .teaser-grid{grid-template-columns:repeat(2,1fr);} }
+
+/* ================================================================
+   SPLIT SECTION — shared two-column chapter (text | image), used
+   by about.html for the studio statement and "Stories in Motion"
+   ================================================================ */
+.split{display:grid;grid-template-columns:1fr 1fr;min-height:78vh;}
+.split-text{display:flex;flex-direction:column;justify-content:center;padding:6vw 5.5vw;}
+.split-text h2{font-size:clamp(38px,6vw,68px);line-height:.96;margin-bottom:26px;}
+.split-text p{font-size:14px;line-height:1.8;max-width:380px;font-weight:300;margin-bottom:8px;}
+.split-fig{position:relative;overflow:hidden;}
+.split-fig img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3) contrast(1.08) brightness(.85);}
+@media (max-width:900px){
+  .split{grid-template-columns:1fr;min-height:auto;}
+  .split-fig{aspect-ratio:4/3;}
+}
+.split.on-oxblood .split-text{background:var(--oxblood);color:var(--cream);}
+.split.on-oxblood .chapter-num{color:var(--cream-faint);}
+.split.on-oxblood .link-line{color:var(--cream);}
+.split.on-black .split-text{background:var(--near-black);color:var(--cream);}
+.split.on-black .chapter-num{color:var(--time-accent);}
+.split.on-black p{color:var(--cream-dim);}
+
+/* ================================================================
+   CTA BAND — shared closing call-to-action, used on every page
+   ================================================================ */
+.cta-band{background:var(--cream);padding:80px 0;}
+.cta-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;}
+.cta-grid .chapter-num{color:var(--oxblood);}
+.cta-grid h2{color:var(--oxblood);font-size:clamp(34px,5vw,56px);line-height:.96;}
+@media (max-width:700px){ .cta-grid{grid-template-columns:1fr;justify-items:start;gap:24px;} }
+
+/* ================================================================
+   PAGE HEADER — shared chapter-opening header used by every
+   category page (and reusable on about/contact): number, big
+   display name, one-line positioning statement, running timecode.
+   ================================================================ */
+.page-header{
+  background:var(--near-black);color:var(--cream);
+  padding:calc(var(--nav-h) + 8vh) 0 7vh;
+}
+.page-header .chapter-num{color:var(--time-accent);}
+.page-header h1{font-size:clamp(46px,9vw,120px);line-height:.92;margin-bottom:22px;}
+.page-header-row{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;}
+.page-header-blurb{font-size:15px;line-height:1.7;max-width:420px;font-weight:300;color:var(--cream-dim);}
+.page-header-time{color:var(--cream-faint);}
+@media (max-width:640px){ .page-header{padding-top:calc(var(--nav-h) + 6vh);} }
+
+/* ================================================================
+   MEDIA PLACEHOLDER — shared "clean, clearly labeled" placeholder
+   used across every category page until Phase 2 supplies real media
+   ================================================================ */
+.media-placeholder{
+  position:relative;width:100%;height:100%;overflow:hidden;
+  background:linear-gradient(155deg, var(--near-black) 0%, var(--oxblood) 100%);
+  color:var(--cream-faint);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;text-align:center;border:1px solid var(--hair-dark);
+}
+.media-placeholder .mp-ratio{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--time-accent);direction:ltr;
+}
+.media-placeholder .mp-label{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cream-faint);
+}
+.media-placeholder .mp-title{
+  font-family:var(--font-display);font-size:clamp(16px,2vw,22px);color:var(--cream-dim);
+  text-transform:uppercase;
+}
+html[lang="ar"] .media-placeholder .mp-title{font-weight:800;}

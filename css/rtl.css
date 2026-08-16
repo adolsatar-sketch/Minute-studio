@@ -1,0 +1,22 @@
+/* ================================================================
+   RTL EXCEPTIONS — loaded only by /ar/*.html, after base.css and
+   transitions.css. Those files are written with logical properties
+   (margin-inline, text-align:start/end, inset-inline-*), so most
+   direction handling — including the page-transition sweep, which
+   animates inset-inline-start — already mirrors correctly with no
+   extra code. This file holds only what logical properties can't
+   express: physical transform-origin keywords and gradient angles.
+   ================================================================ */
+
+/* hero bleed image mask fades in from the trailing edge of the
+   reading direction; the English tree fades from the left (90deg
+   in home.css), so the Arabic tree fades from the right */
+.hero-bleed img{
+  mask-image:linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,1) 100%);
+  -webkit-mask-image:linear-gradient(270deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,1) 100%);
+}
+
+/* transform-origin has no reliable logical equivalent yet, so the
+   transition frame-flash bars are mirrored explicitly */
+[dir="rtl"] .frame-transition .ft-f,
+[dir="rtl"] .ident-frame{ transform-origin:right center; }

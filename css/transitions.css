@@ -1,0 +1,71 @@
+/* ================================================================
+   MINUTE / دقيقة — CINEMATIC PAGE TRANSITION
+   A near-black "frame wipe" cut, not a generic fade. Every page
+   loads already covered by this overlay (default state, render-
+   blocking via the <link> in <head> — no flash of the destination
+   page), then js/transitions.js reveals it. On navigation, the
+   same overlay covers again with a stacked frame-flash + a single
+   timecode-accented sweep line, then the browser performs a real
+   multi-page navigation (location.href) — not SPA routing — so
+   back/forward, direct URLs and no-JS all keep working.
+
+   Only opacity/transform are animated (GPU-friendly). This system
+   must NEVER be disabled or simplified via a mobile max-width
+   query — only the site-wide prefers-reduced-motion rule in
+   base.css (which collapses all transition/animation durations to
+   ~0ms) may reduce it.
+   ================================================================ */
+
+.frame-transition{
+  position:fixed;inset:0;z-index:9999;pointer-events:none;
+  overflow:hidden;background:var(--near-black);
+  opacity:1;transition:opacity .4s var(--ease-sharp);
+}
+.frame-transition[data-state="out"]{opacity:0;}
+
+.frame-transition .ft-frames{position:absolute;inset:0;}
+.frame-transition .ft-f{
+  position:absolute;inset-block:0;inset-inline-start:0;width:100%;
+  transform:scaleX(0);transform-origin:left center;opacity:0;
+}
+/* transform-origin mirrored for RTL in rtl.css (logical keywords aren't reliable yet) */
+.frame-transition .ft-f:nth-child(1){background:var(--near-black);}
+.frame-transition .ft-f:nth-child(2){background:var(--oxblood);}
+.frame-transition .ft-f:nth-child(3){background:var(--maroon);}
+.frame-transition .ft-f:nth-child(4){background:var(--maroon-bright);}
+.frame-transition.ft-play .ft-f{animation:ftFrame .46s var(--ease-sharp) forwards;}
+.frame-transition.ft-play .ft-f:nth-child(1){animation-delay:0ms;}
+.frame-transition.ft-play .ft-f:nth-child(2){animation-delay:40ms;}
+.frame-transition.ft-play .ft-f:nth-child(3){animation-delay:80ms;}
+.frame-transition.ft-play .ft-f:nth-child(4){animation-delay:120ms;}
+@keyframes ftFrame{
+  0%{opacity:1;transform:scaleX(0);}
+  55%{opacity:1;transform:scaleX(1);}
+  100%{opacity:0;transform:scaleX(1);}
+}
+
+.frame-transition .ft-sweep{
+  position:absolute;inset-block:0;inset-inline-start:0;width:2px;
+  background:var(--time-accent);opacity:0;
+  box-shadow:0 0 24px 2px var(--time-accent);
+}
+.frame-transition.ft-play .ft-sweep{animation:ftSweep .5s var(--ease-sharp) forwards;}
+@keyframes ftSweep{
+  0%{opacity:0;inset-inline-start:0;}
+  10%{opacity:1;}
+  85%{opacity:1;}
+  100%{opacity:0;inset-inline-start:100%;}
+}
+
+.frame-transition .ft-time{
+  position:absolute;inset-block-end:5vh;inset-inline-start:50%;
+  transform:translateX(-50%);color:var(--cream-faint);opacity:0;
+}
+.frame-transition.ft-play .ft-time{animation:ftTimeIn .2s var(--ease) .08s forwards;}
+@keyframes ftTimeIn{to{opacity:1;}}
+
+/* generic scan-line utility reused by the homepage ident */
+.scanline{
+  position:absolute;inset-block:0;inset-inline-start:0;width:2px;
+  background:var(--time-accent);box-shadow:0 0 24px 2px var(--time-accent);
+}
